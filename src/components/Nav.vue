@@ -1,11 +1,11 @@
 <template>
   <el-menu
-    default-active="/"
+    default-active="plane-game"
     router
   >
-    <el-menu-item index="/">
-      <i class="el-icon-s-home"></i>
-      <span slot="title">主页</span>
+    <el-menu-item index="plane-game">
+      <i class="el-icon-s-promotion"></i>
+      <span slot="title">飞机大战</span>
     </el-menu-item>
     <el-menu-item index="2">
       <i class="el-icon-menu"></i>

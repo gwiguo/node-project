@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-row gutter="100" id="wrapper">
+    <el-row :gutter="100" id="wrapper">
       <el-col :span="4">
         <Nav></Nav>      
       </el-col>
@@ -28,6 +28,7 @@ body,html{height: 100%;margin: 0;padding: 0;}
 #app{
   height: 100%;
   #wrapper{
+    margin-right: 0 !important;
     height: 100%;
     .el-col{
       height: 100%;
