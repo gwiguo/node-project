@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-row :gutter="100" id="wrapper">
+    <el-row id="wrapper">
       <el-col :span="4">
         <Nav></Nav>      
       </el-col>

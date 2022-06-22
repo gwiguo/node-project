@@ -4,7 +4,7 @@ const path = require('path');
 
 module.exports = {
     mode: 'production',
-    entry: './src/index.js', // 入口文件
+    entry: './client/index.js', // 入口文件
     output: {
         filename: 'main.js', // 输出的文件名
         path: path.resolve(__dirname, 'dist') // 输出文件的路径（__dirname指该配置文件所在的目录）
@@ -24,8 +24,5 @@ module.exports = {
                 }
             }
         ]
-    },
-    alias:{
-        '@':resolve('src')
     }
 }
