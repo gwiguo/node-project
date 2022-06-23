@@ -4,16 +4,21 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
+const router = require('./router')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static(path.resolve(__dirname,'../client/assets')));
-app.use(express.static(path.resolve(__dirname,'../dist/static')));
+app.use(express.static(path.resolve(__dirname,'../client')));
+app.use(express.static(path.resolve(__dirname,'../dist')));
 app.use(cors());
+
+app.use(router);
 
 app.get("/",(req,res)=>{    
     res.send(fs.readFileSync(path.resolve(__dirname,'../dist/index.html'),"utf-8"));
 });
+
+
 
 app.listen(8080,()=>{
     console.log("服务器已启动并监听8080端口");

@@ -230,7 +230,6 @@ export default {
                 this.maxBottom = document.documentElement.offsetHeight - this.plane.height;
                 this.maxLeft = 0;
                 this.maxRight = wrapBox.offsetWidth - this.plane.width;
-                console.log(that.planeMoveCb)
                 document.addEventListener('mousemove', that.planeMoveCb.bind(this))
             }
         }
