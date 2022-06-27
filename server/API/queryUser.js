@@ -11,7 +11,7 @@ exports.post = (req, res) => {
     req.body.uaddress !== undefined && whereSqlArr.push(`uaddress like "%${req.body.uaddress}%"`);
 
     const whereSql = whereSqlArr.length ? whereSqlArr.join(" and ") : "1 = 1";
-    var sql = `select * from jike where ${whereSql}`;
+    var sql = `select * from jike where ${whereSql} limit 30`;
     db.query(sql,(err, data) => {
         if(err) {
             return res.send({
