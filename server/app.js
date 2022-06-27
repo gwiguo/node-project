@@ -20,6 +20,6 @@ app.get("/",(req,res)=>{
 
 
 
-app.listen(8080,()=>{
-    console.log("服务器已启动并监听8080端口");
+app.listen(8000,()=>{
+    console.log("服务器已启动并监听8000端口");
 });
