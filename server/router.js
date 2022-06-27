@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const user = require("./API/user.js");
+const queryUser = require("./API/queryUser.js");
+const userStat = require("./API/userStat.js");
 
-router.post("/user",user.post);
+router.post("/queryUser",queryUser.post);
+router.post("/userStat",userStat.post);
 
 module.exports = router;

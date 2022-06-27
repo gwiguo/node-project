@@ -78,7 +78,7 @@
     <el-table
       :data="table_data"
       border
-      :height="770"
+      :height="table_height"
       v-loading="table_loading"
       element-loading-text="拼命加载中"
       element-loading-spinner="el-icon-loading"
@@ -88,9 +88,14 @@
       </el-table-column>
       <!-- <el-table-column prop="uid" label="身份证" align="center" width="180">
       </el-table-column> -->
-      <el-table-column prop="usex" label="性别" align="center" width="130">
+      <el-table-column prop="usex" label="性别" align="center" width="80">
       </el-table-column>
-      <el-table-column prop="ubirth" label="出生年份" align="center" width="130">
+      <el-table-column
+        prop="ubirth"
+        label="出生年份"
+        align="center"
+        width="130"
+      >
       </el-table-column>
       <el-table-column prop="uzy" label="专业" align="center" width="200">
       </el-table-column>
@@ -103,7 +108,7 @@
         align="center"
       >
       </el-table-column>
-      <el-table-column prop="uphone" label="手机号" align="center" width="130">
+      <el-table-column prop="uphone" label="手机号" align="center" width="150">
       </el-table-column>
       <!-- <el-table-column label="操作" width="120" align="center" fixed="right">
         <template slot-scope="scope">
@@ -114,11 +119,50 @@
         </template>
       </el-table-column> -->
     </el-table>
+    <el-row style="margin-top: 20px">
+      <el-col :span="24">
+        <el-button
+          icon="el-icon-s-data"
+          type="success"
+          size="small"
+          @click="dialogVisible = true"
+          >数据可视化</el-button
+        >
+      </el-col>
+    </el-row>
+    <el-dialog
+      title="用户统计"
+      :visible.sync="dialogVisible"
+      width="90%"
+      top="5%"
+      @open="get_user_stat"
+    >
+      <el-row>
+        <el-col :span="12">
+          <div id="sex-canvas" style="height: 500px"></div>
+        </el-col>
+        <el-col :span="12">
+          <div id="birth-canvas" style="height: 500px"></div>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <div id="zy-canvas" style="height: 500px"></div>
+        </el-col>
+        <el-col :span="12">
+          <div id="province-canvas" style="height: 500px"></div>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">关 闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import * as echarts from "echarts";
 
 export default {
   name: "Home",
@@ -126,19 +170,22 @@ export default {
     return {
       table_data: [],
       table_loading: true,
+      dialogVisible: false,
       payload: {},
+      table_height: window.innerHeight - 200,
     };
   },
   methods: {
     get_data() {
       this.table_loading = true;
       axios
-        .post("/user", this.payload)
+        .post("/queryUser", this.payload)
         .then((res) => {
-          if (res.data.list.length) {
+          if (res.data.code == 0) {
             this.table_data = res.data.list;
           } else {
             this.table_data = [];
+            this.$message.error(res.data.err_message);
           }
         })
         .catch((err) => {
@@ -148,8 +195,106 @@ export default {
           this.table_loading = false;
         });
     },
+    get_user_stat() {
+      return axios
+        .post("/userStat")
+        .then((res) => {
+          if (res.data.code == 0) {
+            const data = res.data.data;
+
+            const [sexChart, birthChart] = [
+              echarts.init(document.getElementById("sex-canvas")),
+              echarts.init(document.getElementById("birth-canvas")),
+            ];
+
+            sexChart.setOption({
+				title: {
+					text: '学生性别',
+      				textAlign: 'center',
+      				left: '50%',
+				},
+              tooltip: {
+                trigger: "item",
+              },
+              legend: {
+                top: "5%",
+                left: "center",
+              },
+              series: [
+                {
+                  name: "Access From",
+                  type: "pie",
+                  radius: ["40%", "70%"],
+                  avoidLabelOverlap: false,
+                  itemStyle: {
+                    borderRadius: 10,
+                    borderColor: "#fff",
+                    borderWidth: 2,
+                  },
+                  label: {
+                    show: false,
+                    position: "center",
+                  },
+                  emphasis: {
+                    label: {
+                      show: true,
+                      fontSize: "40",
+                      fontWeight: "bold",
+                    },
+                  },
+                  labelLine: {
+                    show: false,
+                  },
+                  data: [
+                    { value: data.sex["男"], name: "男" },
+                    { value: data.sex["女"], name: "女" },
+                  ],
+                },
+              ],
+            });
+
+
+            birthChart.setOption({
+				title: {
+					text: '学生出生年份',
+      				textAlign: 'center',
+      				left: '50%',
+				},
+              dataset: [
+                {
+                  dimensions: ["zy","year"],
+                  source: [
+					...Object.keys(data.birth).map((year) => ([year,data.birth[year]]))
+				  ],
+                },
+                {
+                  transform: {
+                    type: "sort",
+                    config: { dimension: "year", order: "desc" },
+                  },
+                },
+              ],
+              xAxis: {
+                type: "category",
+                axisLabel: { interval: 0, rotate: 30 },
+              },
+              yAxis: {},
+              series: {
+                type: "bar",
+                encode: { x: "zy", y: "year" },
+                datasetIndex: 1,
+              },
+            });
+          } else {
+            this.$message.error(res.data.err_message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     handleIconClick() {
-      console.log('click')
+      console.log("click");
     },
     handleChangeInput() {
       clearTimeout(this.timer);
@@ -183,3 +328,16 @@ export default {
         
 //         // console.log(str)
 //     })
+
+// CREATE TABLE `jike` (
+//     `id` INT(11) NOT NULL AUTO_INCREMENT,
+//     `uid` VARCHAR(255) DEFAULT '' COMMENT '身份证',
+//     `uname` VARCHAR(255) DEFAULT '' COMMENT '姓名',
+//     `usex` VARCHAR(255) DEFAULT '' COMMENT '性别',
+//     `ubirth` VARCHAR(255) DEFAULT '' COMMENT '出生年份',
+//     `uprovince` VARCHAR(255) DEFAULT '' COMMENT '省份',
+//     `uzy` VARCHAR(255) DEFAULT '' COMMENT '专业',
+//     `uaddress` VARCHAR(255) DEFAULT '' COMMENT '地址',
+//     `uphone` VARCHAR(255) DEFAULT '' COMMENT '手机号',
+//   PRIMARY KEY (`id`)
+// ) ENGINE = InnoDB DEFAULT CHARSET = utf8 ROW_FORMAT = DYNAMIC COMMENT = '广东理工学院'

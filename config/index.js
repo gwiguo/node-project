@@ -11,7 +11,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      "/user":"http://localhost:8000"
+      "/queryUser":"http://localhost:8000",
+      "/userStat":"http://localhost:8000",
     },
 
     // Various Dev Server settings

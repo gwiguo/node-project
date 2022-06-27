@@ -11,10 +11,13 @@ exports.post = (req, res) => {
     req.body.uaddress !== undefined && whereSqlArr.push(`uaddress like "%${req.body.uaddress}%"`);
 
     const whereSql = whereSqlArr.length ? whereSqlArr.join(" and ") : "1 = 1";
-    var sql = `select * from jike where ${whereSql} limit 100`;
+    var sql = `select * from jike where ${whereSql}`;
     db.query(sql,(err, data) => {
         if(err) {
-            return res.send('错误：' + err.message)
+            return res.send({
+                err_message:'错误：' + err.message,
+                code:-1
+            })
         }
         res.send({
             list:data,

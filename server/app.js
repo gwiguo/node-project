@@ -14,9 +14,9 @@ app.use(cors());
 
 app.use(router);
 
-app.get("/",(req,res)=>{    
-    res.send(fs.readFileSync(path.resolve(__dirname,'../dist/index.html'),"utf-8"));
-});
+// app.get("/",(req,res)=>{    
+//     res.send(fs.readFileSync(path.resolve(__dirname,'../dist/index.html'),"utf-8"));
+// });
 
 
 
