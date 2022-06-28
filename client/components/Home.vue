@@ -186,6 +186,8 @@ export default {
       table_height: window.innerHeight - 200,
       sexChart:null,
       birthChart:null,
+      zyChart:null,
+      provinceChart:null,
     };
   },
   methods: {
@@ -219,12 +221,9 @@ export default {
               (this.sexChart = echarts.init(
                 document.getElementById("sex-canvas")
               ));
-            !this.birthChart &&
-              (this.birthChart = echarts.init(
-                document.getElementById("birth-canvas")
-              ));
 
             this.sexChart.setOption({
+              color:["#7ED3F4","#FE6F6F"],
               title: {
                 text: "学生性别",
                 textAlign: "center",
@@ -232,15 +231,16 @@ export default {
               },
               tooltip: {
                 trigger: "item",
+                formatter: '{a} <br/>{b} : {c} ({d}%)'
               },
               legend: {
-				orient: 'vertical',
-				left: 'left',
-				top:"center"
+                orient: 'vertical',
+                left: 'left',
+                top:"center"
               },
               series: [
                 {
-                  name: "Access From",
+                  name: "性别",
                   type: "pie",
                   radius: ["40%", "70%"],
                   avoidLabelOverlap: false,
@@ -270,6 +270,12 @@ export default {
                 },
               ],
             });
+
+
+            !this.birthChart &&
+              (this.birthChart = echarts.init(
+                document.getElementById("birth-canvas")
+              ));
 
             this.birthChart.setOption({
               title: {
@@ -305,6 +311,35 @@ export default {
                 datasetIndex: 1,
               },
             });
+
+
+            !this.zyChart &&
+              (this.zyChart = echarts.init(
+                document.getElementById("zy-canvas")
+              ));
+
+            this.zyChart.setOption({
+              title: {
+                text: "专业分布",
+                textAlign: "center",
+                left: "10%",
+              },
+              series: [
+                {
+                  name: 'Nightingale Chart',
+                  type: 'pie',
+                  radius: [50, 250],
+                  center: ['50%', '50%'],
+                  roseType: 'area',
+                  itemStyle: {
+                    borderRadius: 8
+                  },
+                  data: Object.keys(data.zy).map(zy=>({value:data.zy[zy],name:zy}))
+                }
+              ]
+            });
+
+
           } else {
             this.$message.error(res.data.err_message);
           }
