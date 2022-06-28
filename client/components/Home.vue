@@ -5,6 +5,18 @@
   .search-container .el-col > div {
     margin-bottom: 5px;
   }
+  /deep/.el-dialog{
+	height: 90%;
+	.el-dialog__body{
+		height: calc(~"100% - 160px");
+		.el-row{
+			height: 50%;
+		}
+		.el-col,.canvas-container{
+			height: 100%;			
+		}
+	}
+  }
 }
 </style>
 <template>
@@ -131,26 +143,25 @@
       </el-col>
     </el-row>
     <el-dialog
-      title="用户统计"
       :visible.sync="dialogVisible"
       width="90%"
-      top="5%"
+      top="3%"
       @open="get_user_stat"
     >
       <el-row>
-        <el-col :span="12">
-          <div id="sex-canvas" style="height: 500px"></div>
+        <el-col :span="10">
+          <div id="sex-canvas" class="canvas-container"></div>
         </el-col>
-        <el-col :span="12">
-          <div id="birth-canvas" style="height: 500px"></div>
+        <el-col :span="14">
+          <div id="birth-canvas" class="canvas-container"></div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <div id="zy-canvas" style="height: 500px"></div>
+          <div id="zy-canvas" class="canvas-container"></div>
         </el-col>
         <el-col :span="12">
-          <div id="province-canvas" style="height: 500px"></div>
+          <div id="province-canvas" class="canvas-container"></div>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -173,6 +184,8 @@ export default {
       dialogVisible: false,
       payload: {},
       table_height: window.innerHeight - 200,
+      sexChart:null,
+      birthChart:null,
     };
   },
   methods: {
@@ -196,29 +209,34 @@ export default {
         });
     },
     get_user_stat() {
-      return axios
+      axios
         .post("/userStat")
         .then((res) => {
           if (res.data.code == 0) {
             const data = res.data.data;
 
-            const [sexChart, birthChart] = [
-              echarts.init(document.getElementById("sex-canvas")),
-              echarts.init(document.getElementById("birth-canvas")),
-            ];
+            !this.sexChart &&
+              (this.sexChart = echarts.init(
+                document.getElementById("sex-canvas")
+              ));
+            !this.birthChart &&
+              (this.birthChart = echarts.init(
+                document.getElementById("birth-canvas")
+              ));
 
-            sexChart.setOption({
-				title: {
-					text: '学生性别',
-      				textAlign: 'center',
-      				left: '50%',
-				},
+            this.sexChart.setOption({
+              title: {
+                text: "学生性别",
+                textAlign: "center",
+                left: "50%",
+              },
               tooltip: {
                 trigger: "item",
               },
               legend: {
-                top: "5%",
-                left: "center",
+				orient: 'vertical',
+				left: 'left',
+				top:"center"
               },
               series: [
                 {
@@ -253,19 +271,21 @@ export default {
               ],
             });
 
-
-            birthChart.setOption({
-				title: {
-					text: '学生出生年份',
-      				textAlign: 'center',
-      				left: '50%',
-				},
+            this.birthChart.setOption({
+              title: {
+                text: "学生出生年份",
+                textAlign: "center",
+                left: "50%",
+              },
               dataset: [
                 {
-                  dimensions: ["zy","year"],
+                  dimensions: ["zy", "year"],
                   source: [
-					...Object.keys(data.birth).map((year) => ([year,data.birth[year]]))
-				  ],
+                    ...Object.keys(data.birth).map((year) => [
+                      year,
+                      data.birth[year],
+                    ]),
+                  ],
                 },
                 {
                   transform: {
