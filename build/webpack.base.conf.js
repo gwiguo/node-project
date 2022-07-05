@@ -30,7 +30,16 @@ module.exports = {
     }
   },
   module: {
-    rules: [
+    rules: [      
+      {
+        test: /\.(c|le)ss$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'less-loader',
+          'postcss-loader',
+        ]
+      },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -39,6 +48,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
+        exclude: /node_modules/,  // 优化处理加快速度
         include: [resolve('client'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
       {

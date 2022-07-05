@@ -6,15 +6,20 @@
     margin-bottom: 5px;
   }
   /deep/.el-dialog{
-	height: 90%;
+	height: 95%;
+	margin-bottom: 0;
 	.el-dialog__body{
-		height: calc(~"100% - 160px");
+		height: calc(~"100% - 110px");
+		padding-bottom: 0;
 		.el-row{
 			height: 50%;
 		}
 		.el-col,.canvas-container{
 			height: 100%;			
 		}
+	}
+	.el-dialog__footer{
+		padding-bottom: 5px;
 	}
   }
 }
@@ -145,7 +150,7 @@
     <el-dialog
       :visible.sync="dialogVisible"
       width="90%"
-      top="3%"
+      top="20px"
       @open="get_user_stat"
     >
       <el-row>
@@ -165,7 +170,7 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">关 闭</el-button>
+        <el-button @click="dialogVisible = false" size="small">关 闭</el-button>
       </span>
     </el-dialog>
   </div>

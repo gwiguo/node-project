@@ -4,24 +4,20 @@
   margin: 0;
   padding: 0;
 }
-
 body,
 html {
   overflow: hidden;
   height: 100%;
   // background-color: #000;
 }
-
 li {
   list-style: none;
 }
-
 h1 {
   height: 50px;
   padding-bottom: 100px;
   line-height: 50px;
 }
-
 #wrap {
   overflow: hidden;
   position: relative;

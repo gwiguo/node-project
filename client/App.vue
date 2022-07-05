@@ -23,7 +23,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 body,html{height: 100%;margin: 0;padding: 0;}
 #app{
   height: 100%;

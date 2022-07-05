@@ -23,6 +23,10 @@
       <i class="el-icon-setting"></i>
       <span slot="title">Canvas</span>
     </el-menu-item>
+    <el-menu-item index="yys-home">
+      <i class="el-icon-picture-outline-round"></i>
+      <span slot="title">阴阳师官网</span>
+    </el-menu-item>
   </el-menu>
 </template>
 <script>
@@ -35,7 +39,7 @@ export default {
   },  
 };
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .el-menu{
     height: 100%;
 }

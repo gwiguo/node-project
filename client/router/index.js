@@ -4,6 +4,8 @@ import Home from '@/components/Home'
 import PlaneGame from '@/components/plane-game'
 import Banner1 from '@/components/Banner1'
 import Canvas from '@/components/Canvas'
+import YysHome from '@/components/yys/home';
+import YysIndex from '@/components/yys/index';
 
 Vue.use(Router)
 
@@ -28,6 +30,16 @@ export default new Router({
 			path: '/canvas',
 			name: 'canvas',
 			component: Canvas
+		},
+		{
+			path: '/yys-home',
+			name: 'yys-home',
+			component: YysHome
+		},
+		{
+			path: '/yys-index',
+			name: 'yys-index',
+			component: YysIndex
 		},
 	]
 })
